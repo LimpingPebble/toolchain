@@ -27,7 +27,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           flavor: |
-            latest=enable
+            latest=true
             prefix=
             suffix=
           tags: |
