@@ -42,7 +42,7 @@ jobs:
       - name: Set ninja filename
         id: ninja-filename
         run: |
-          if [ "${{ matrix.platform }}" = "amd64" ]; then
+          if [ "${{ matrix.platform }}" = "linux/amd64" ]; then
             echo 'name=ninja-linux.zip' >> $GITHUB_OUTPUT
           else
             echo 'name=ninja-linux-aarch64.zip' >> $GITHUB_OUTPUT
