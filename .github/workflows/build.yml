@@ -12,14 +12,86 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm/v6
+          - linux/arm/v7
+          - linux/arm64
+
     steps:
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Set cache name
+        id: cache-name
+        run: |
+          echo 'cache-name=asterisk-cache-${{ matrix.platform }}' | sed 's:/:-:g' >> $GITHUB_OUTPUT
+
+      - name: Set ninja filename
+        id: ninja-filename
+        run: |
+          if [ "${{ matrix.platform }}" = "amd64" ]; then
+            echo 'name=ninja-linux.zip' >> $GITHUB_OUTPUT
+          else
+            echo 'name=ninja-linux-aarch64.zip' >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          build-args: |
+            LLVM_VERSION=${{ env.LLVM_VERSION }}
+            NINJA_VERSION=${{ env.NINJA_VERSION }}
+            NINJA_FILENAME=${{ steps.ninja-filename.outputs.name }}
+          cache-from: type=gha
+          cache-to: type=local,dest=/tmp/toolchain-cache,mode=max
+
+      - name: Upload cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: toolchain-cache-${{ steps.cache-name.outputs.cache-name }}
+          path: /tmp/toolchain-cache
+          if-no-files-found: error
+          retention-days: 1
+
+  push:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Download cache
+        uses: actions/download-artifact@v3
+        with:
+          path: /tmp/toolchain-cache
+
+      - name: Login to GitHub repository
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Metadata
         uses: docker/metadata-action@v5
@@ -33,23 +105,17 @@ jobs:
           tags: |
             type=raw,value=llvm${{ env.LLVM_VERSION }}-ninja${{ env.NINJA_VERSION }}
 
-      - name: Login to GitHub repository
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v4
         with:
-          push: true
           context: .
-          platforms: linux/amd64
-          build-args: |
-            LLVM_VERSION=${{ env.LLVM_VERSION }}
-            NINJA_VERSION=${{ env.NINJA_VERSION }}
-          labels: ${{ steps.metadata.outputs.labels }}
+          platforms: |
+            linux/amd64
+            linux/arm/v6
+            linux/arm/v7
+            linux/arm64
+          push: true
           tags: ${{ steps.metadata.outputs.tags }}
-          cache-from: type=gha
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=gha,mode=max

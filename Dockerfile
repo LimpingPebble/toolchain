@@ -1,6 +1,7 @@
 FROM ubuntu:22.04
 ARG LLVM_VERSION=18
 ARG NINJA_VERSION=1.12.0
+ARG NINJA_FILENAME=ninja-linux.zip
 
 RUN apt-get update && \
 	apt-get upgrade -y && \
@@ -37,7 +38,7 @@ RUN apt clean all &&\
 	apt update && \
 	apt install -y cmake cmake-data cmake-extras extra-cmake-modules
 
-RUN wget https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-linux.zip && \
+RUN wget https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/${NINJA_FILENAME} && \
 	unzip ninja-linux.zip && \
 	mv ninja /usr/bin/ninja && \
 	chmod +x /usr/bin/ninja
