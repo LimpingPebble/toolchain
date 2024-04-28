@@ -42,12 +42,33 @@ jobs:
             echo 'name=ninja-linux-aarch64.zip' >> $GITHUB_OUTPUT
           fi
 
+      - name: Login to GitHub repository
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Metadata
+        uses: docker/metadata-action@v5
+        id: metadata
+        with:
+          images: ghcr.io/${{ github.repository }}
+          flavor: |
+            latest=true
+            prefix=
+            suffix=
+          tags: |
+            type=raw,value=llvm${{ env.LLVM_VERSION }}-ninja${{ env.NINJA_VERSION }}
+
       - name: Build image
         uses: docker/build-push-action@v5
         with:
           push: true
           context: .
           platforms: ${{ matrix.platform }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
           build-args: |
             LLVM_VERSION=${{ env.LLVM_VERSION }}
             NINJA_VERSION=${{ env.NINJA_VERSION }}
