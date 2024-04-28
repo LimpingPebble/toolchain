@@ -39,7 +39,7 @@ RUN apt clean all &&\
 	apt install -y cmake cmake-data cmake-extras extra-cmake-modules
 
 RUN wget https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/${NINJA_FILENAME} && \
-	unzip ninja-linux.zip && \
+	unzip ${NINJA_FILENAME} && \
 	mv ninja /usr/bin/ninja && \
 	chmod +x /usr/bin/ninja
 
