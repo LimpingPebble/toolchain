@@ -65,11 +65,8 @@ jobs:
         uses: docker/build-push-action@v5
         id: build
         with:
-          push: true
           context: .
           platforms: ${{ matrix.platform }}
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
           build-args: |
             LLVM_VERSION=${{ env.LLVM_VERSION }}
             NINJA_VERSION=${{ env.NINJA_VERSION }}
@@ -83,7 +80,6 @@ jobs:
           mkdir -p /tmp/digests
           digest="${{ steps.build.outputs.digest }}"
           touch "/tmp/digests/${digest#sha256:}"
-
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
@@ -111,6 +107,12 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ github.repository }}
+          flavor: |
+            latest=true
+            prefix=
+            suffix=
+          tags: |
+            type=raw,value=llvm${{ env.LLVM_VERSION }}-ninja${{ env.NINJA_VERSION }}
 
       - name: Login to GitHub registry
         uses: docker/login-action@v3
