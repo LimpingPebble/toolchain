@@ -33,8 +33,10 @@ RUN wget https://apt.llvm.org/llvm.sh && \
 RUN apt clean all &&\
 	apt remove --purge --auto-remove cmake && \
 	wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | \
+	gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
+	wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | \
 	gpg --dearmor - | \
-	sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
+	tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
 	apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
 	apt update  && \
 	apt install kitware-archive-keyring && \
@@ -47,10 +49,11 @@ RUN wget https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION
 	mv ninja /usr/bin/ninja && \
 	chmod +x /usr/bin/ninja
 
-RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
-RUN sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.280-jammy.list https://packages.lunarg.com/vulkan/1.3.280/lunarg-vulkan-1.3.280-jammy.list
-RUN sudo apt update
-RUN sudo apt install -y vulkan-sdk
+RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | \
+	tee /etc/apt/trusted.gpg.d/lunarg.asc && \
+	wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.280-jammy.list https://packages.lunarg.com/vulkan/1.3.280/lunarg-vulkan-1.3.280-jammy.list && \
+	sudo apt update && \
+	sudo apt install -y vulkan-sdk
 
 USER runner
 WORKDIR /home/runner
