@@ -55,5 +55,7 @@ RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | \
 	sudo apt update && \
 	sudo apt install -y vulkan-sdk
 
+RUN apt install -y libxrandr-dev
+
 USER runner
 WORKDIR /home/runner
