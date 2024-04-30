@@ -15,6 +15,9 @@ RUN apt-get update && \
 	libvulkan-dev \
 	git
 
+RUN apt-get install -y libx11-dev zlib1g-dev
+RUN apt-get install -y libxext-dev
+
 RUN adduser --disabled-password runner
 RUN usermod -aG sudo runner
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
