@@ -59,5 +59,7 @@ jobs:
             LLVM_VERSION=${{ env.LLVM_VERSION }}
             NINJA_VERSION=${{ env.NINJA_VERSION }}
             NINJA_FILENAME=${{ steps.ninja-filename.outputs.name }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
