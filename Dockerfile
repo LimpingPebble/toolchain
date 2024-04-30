@@ -12,7 +12,8 @@ RUN apt-get update && \
 	software-properties-common \
 	gnupg \
 	unzip \
-	git
+	git \
+	build-essential
 
 RUN apt-get install -y libx11-dev zlib1g-dev
 RUN apt-get install -y libxext-dev
@@ -53,9 +54,7 @@ RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | \
 	tee /etc/apt/trusted.gpg.d/lunarg.asc && \
 	wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.280-jammy.list https://packages.lunarg.com/vulkan/1.3.280/lunarg-vulkan-1.3.280-jammy.list && \
 	sudo apt update && \
-	sudo apt install -y vulkan-sdk
-
-RUN apt install -y xorg-dev
+	sudo apt install -y vulkan-sdk xorg-dev
 
 USER runner
 WORKDIR /home/runner
