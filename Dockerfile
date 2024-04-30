@@ -12,7 +12,6 @@ RUN apt-get update && \
 	software-properties-common \
 	gnupg \
 	unzip \
-	libvulkan-dev \
 	git
 
 RUN apt-get install -y libx11-dev zlib1g-dev
