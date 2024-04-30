@@ -12,7 +12,8 @@ RUN apt-get update && \
 	software-properties-common \
 	gnupg \
 	unzip \
-	libvulkan-dev
+	libvulkan-dev \
+	git
 
 RUN adduser --disabled-password runner
 RUN usermod -aG sudo runner
@@ -45,3 +46,4 @@ RUN wget https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION
 	chmod +x /usr/bin/ninja
 
 USER runner
+WORKDIR /home/runner
