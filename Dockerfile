@@ -11,7 +11,8 @@ RUN apt-get update && \
 	lsb-release \
 	software-properties-common \
 	gnupg \
-	unzip
+	unzip \
+	libvulkan-dev
 
 RUN adduser --disabled-password runner
 RUN usermod -aG sudo runner
