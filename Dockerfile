@@ -47,10 +47,10 @@ RUN wget https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION
 	mv ninja /usr/bin/ninja && \
 	chmod +x /usr/bin/ninja
 
-RUN wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | apt-key add -
-RUN wget -qO /etc/apt/sources.list.d/lunarg-vulkan-focal.list https://packages.lunarg.com/vulkan/lunarg-vulkan-focal.list
-RUN apt update -y
-RUN apt-get install -y vulkan-sdk
+RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+RUN sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.280-jammy.list https://packages.lunarg.com/vulkan/1.3.280/lunarg-vulkan-1.3.280-jammy.list
+RUN sudo apt update
+RUN sudo apt install -y vulkan-sdk
 
 USER runner
 WORKDIR /home/runner
