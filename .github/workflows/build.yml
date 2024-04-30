@@ -53,6 +53,7 @@ jobs:
         uses: docker/build-push-action@v5
         id: build
         with:
+          push: true
           context: .
           build-args: |
             LLVM_VERSION=${{ env.LLVM_VERSION }}
