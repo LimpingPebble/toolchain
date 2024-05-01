@@ -18,10 +18,6 @@ RUN apt-get update && \
 RUN apt-get install -y libx11-dev zlib1g-dev
 RUN apt-get install -y libxext-dev
 
-RUN adduser --disabled-password runner
-RUN usermod -aG sudo runner
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
 RUN wget https://apt.llvm.org/llvm.sh && \
 	chmod +x llvm.sh && \
 	./llvm.sh $LLVM_VERSION all && \
@@ -59,6 +55,3 @@ RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | \
 RUN curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh && \
 	bash nodesource_setup.sh && \
 	apt install -y nodejs
-
-USER runner
-WORKDIR /home/runner
