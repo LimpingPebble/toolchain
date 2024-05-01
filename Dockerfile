@@ -56,5 +56,9 @@ RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | \
 	sudo apt update && \
 	sudo apt install -y vulkan-sdk xorg-dev
 
+RUN curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh && \
+	bash nodesource_setup.sh && \
+	apt install -y nodejs
+
 USER runner
 WORKDIR /home/runner
