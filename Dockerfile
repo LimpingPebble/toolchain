@@ -3,9 +3,9 @@ ARG LLVM_VERSION=18
 ARG NINJA_VERSION=1.12.0
 ARG NINJA_FILENAME=ninja-linux.zip
 
-RUN apt-get update && \
-	apt-get upgrade -y && \
-	apt-get install -y wget \
+RUN apt update && \
+	apt upgrade -y && \
+	apt install -y wget \
 	curl \
 	sudo \
 	lsb-release \
@@ -15,8 +15,15 @@ RUN apt-get update && \
 	git \
 	build-essential
 
-RUN apt-get install -y libx11-dev zlib1g-dev
-RUN apt-get install -y libxext-dev
+RUN apt install -y libboost-all-dev
+
+RUN curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh && \
+	bash nodesource_setup.sh && \
+	apt install -y nodejs
+
+
+RUN apt install -y libx11-dev zlib1g-dev
+RUN apt install -y libxext-dev
 
 RUN wget https://apt.llvm.org/llvm.sh && \
 	chmod +x llvm.sh && \
@@ -51,7 +58,3 @@ RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | \
 	wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.280-jammy.list https://packages.lunarg.com/vulkan/1.3.280/lunarg-vulkan-1.3.280-jammy.list && \
 	sudo apt update && \
 	sudo apt install -y vulkan-sdk xorg-dev
-
-RUN curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh && \
-	bash nodesource_setup.sh && \
-	apt install -y nodejs
