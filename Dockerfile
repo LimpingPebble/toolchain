@@ -61,7 +61,7 @@ RUN apt install -y \
 	libx11-dev \
 	zlib1g-dev \
 	libxext-dev \
-	libboost-dev-all
+	libboost-all-dev
 
 RUN wget https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/${NINJA_FILENAME} && \
 	unzip ${NINJA_FILENAME} && \
