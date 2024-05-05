@@ -47,8 +47,8 @@ FROM base AS vulkan
 RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | \
 	tee /etc/apt/trusted.gpg.d/lunarg.asc && \
 	wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.280-jammy.list https://packages.lunarg.com/vulkan/1.3.280/lunarg-vulkan-1.3.280-jammy.list && \
-	sudo apt update && \
-	sudo apt install -y vulkan-sdk xorg-dev
+	apt update && \
+	apt install -y vulkan-sdk xorg-dev
 
 FROM base AS final
 
