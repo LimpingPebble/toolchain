@@ -73,6 +73,7 @@ COPY --from=llvm /usr/bin/llvm* /usr/bin/
 COPY --from=llvm /usr/bin/lldb* /usr/bin/
 COPY --from=llvm /usr/include/llvm* /usr/include/
 COPY --from=llvm /usr/include/clang* /usr/include/
+COPY --from=llvm /usr/lib/cmake/clang* /usr/lib/cmake
 COPY --from=llvm /usr/lib/clang /usr/lib/
 COPY --from=llvm /usr/lib/llvm* /usr/lib/
 COPY --from=llvm /usr/share/clang* /usr/share/
@@ -80,9 +81,8 @@ COPY --from=llvm /usr/share/clang* /usr/share/
 COPY --from=cmake /usr/bin/cmake /usr/bin/
 COPY --from=cmake /usr/bin/cpack /usr/bin/
 COPY --from=cmake /usr/bin/ctest /usr/bin/
-COPY --from=cmake /usr/lib/cmake /usr/lib
-COPY --from=cmake /usr/share/cmake* /usr/share
-COPY --from=cmake /usr/share/ECM /usr/share
+COPY --from=cmake /usr/share/cmake* /usr/share/
+COPY --from=cmake /usr/share/ECM /usr/share/
 
 COPY --from=vulkan \
 	/usr/bin/dxc \
