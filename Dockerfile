@@ -1,6 +1,8 @@
 FROM ubuntu:22.04 AS base
 ARG NINJA_VERSION=1.12.0
 ARG NINJA_FILENAME=ninja-linux.zip
+ARG LLVM_VERSION=18
+
 
 RUN apt-get update && \
 	apt-get upgrade -y && \
@@ -12,10 +14,6 @@ RUN apt-get update && \
 	unzip \
 	git \
 	build-essential
-
-
-FROM base AS llvm
-ARG LLVM_VERSION=18
 
 RUN wget https://apt.llvm.org/llvm.sh && \
 	chmod +x llvm.sh && \
@@ -67,16 +65,6 @@ RUN wget https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION
 	unzip ${NINJA_FILENAME} && \
 	mv ninja /usr/bin/ninja && \
 	chmod +x /usr/bin/ninja
-
-COPY --from=llvm /usr/bin/*clang* /usr/bin/
-COPY --from=llvm /usr/bin/llvm* /usr/bin/
-COPY --from=llvm /usr/bin/lldb* /usr/bin/
-COPY --from=llvm /usr/include/llvm* /usr/include/
-COPY --from=llvm /usr/include/clang* /usr/include/
-COPY --from=llvm /usr/lib/cmake/clang* /usr/lib/cmake
-COPY --from=llvm /usr/lib/clang /usr/lib/
-COPY --from=llvm /usr/lib/llvm* /usr/lib/
-COPY --from=llvm /usr/share/clang* /usr/share/
 
 COPY --from=cmake /usr/bin/cmake /usr/bin/
 COPY --from=cmake /usr/bin/cpack /usr/bin/
