@@ -57,4 +57,4 @@ RUN wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | \
 	tee /etc/apt/trusted.gpg.d/lunarg.asc && \
 	wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.280-jammy.list https://packages.lunarg.com/vulkan/1.3.280/lunarg-vulkan-1.3.280-jammy.list && \
 	sudo apt update && \
-	sudo apt install -y vulkan-sdk xorg-dev libglew-dev libXmu-dev libXi-dev libgl-dev dos2unix freeglut3-dev
+	sudo apt install -y vulkan-sdk xorg-dev libglew-dev freeglut3-dev
